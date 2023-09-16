@@ -1,4 +1,4 @@
-import { dropNewPost, getPosts } from "./api.js";
+import { addLike, dropNewPost, getPosts, removeLike } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -45,7 +45,6 @@ export const goToPage = (newPage, data) => {
       LOADING_PAGE,
     ].includes(newPage)
   ) {
-
     if (newPage === ADD_POSTS_PAGE) {
       // Если пользователь не авторизован, то отправляем его на авторизацию перед добавлением поста
       page = user ? ADD_POSTS_PAGE : AUTH_PAGE;
@@ -98,7 +97,26 @@ export const goToPage = (newPage, data) => {
   throw new Error("страницы не существует");
 };
 
-const renderApp = () => {
+export const clickToLike = () => {
+  getPosts({ token: getToken() }).then((response) => {
+    const likeButtons = document.querySelectorAll(".like-button");
+    for (const likeButton of likeButtons) {
+      likeButton.addEventListener("click", () => {
+        for (let i = 0; i < response.length; i++) {
+          if (response[i].id === likeButton.dataset.likeid) {
+            if (response[i].isLiked = false) {
+              addLike({ idPost: likeButton.dataset.likeid, token: getToken()})
+            } else {
+              removeLike({ idPost: likeButton.dataset.likeid, token: getToken()})
+            }
+          }
+        }
+      });
+    }
+  })
+};
+
+export const renderApp = () => {
   const appEl = document.getElementById("app");
   if (page === LOADING_PAGE) {
     return renderLoadingPageComponent({
@@ -125,9 +143,7 @@ const renderApp = () => {
     return renderAddPostPageComponent({
       appEl,
       onAddPostClick({ description, imageUrl }) {
-        // TODO: реализовать добавление поста в API
-        dropNewPost({description, imageUrl, token: getToken()});
-        console.log("Добавляю пост...", { description, imageUrl });
+        dropNewPost({ description, imageUrl, token: getToken() });
         goToPage(POSTS_PAGE);
       },
     });
@@ -136,7 +152,7 @@ const renderApp = () => {
   if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
-    });
+    })
   }
 
   if (page === USER_POSTS_PAGE) {
@@ -161,7 +177,7 @@ const renderApp = () => {
         <img class="post-image" src="${post.imageUrl}">
       </div>
       <div class="post-likes">
-        <button data-post-id="${post.id}" class="like-button">
+        <button class="like-button" data-likeid='${post.id}'>
           <img src="./assets/images/${
             post.isLiked === true ? "like-active.svg" : "like-not-active.svg"
           }">
@@ -180,8 +196,9 @@ const renderApp = () => {
     </li>`);
       })
       .join("");
-    return;
+      return;
   }
+
 };
 
 goToPage(POSTS_PAGE);

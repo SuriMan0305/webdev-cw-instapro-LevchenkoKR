@@ -70,6 +70,24 @@ export const dropNewPost = ({description, imageUrl, token}) => {
   })
 }
 
+export const addLike = ({idPost, token}) => {
+  return fetch(postsHost + `/${idPost}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+}
+
+export const removeLike = ({idPost, token}) => {
+  return fetch(postsHost + `/${idPost}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+}
+
 // Загружает картинку в облако, возвращает url загруженной картинки
 export function uploadImage({ file }) {
   const data = new FormData();
