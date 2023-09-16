@@ -8,7 +8,7 @@ export function renderHeaderComponent({ element }) {
       <button class="header-button add-or-login-button">
       ${
         user
-          ? `<div title="Добавить пост" class="add-post-sign"></div>`
+          ? `<div title="Добавить пост" class="add-post-sign" id="add-post-button"></div>`
           : "Войти"
       }
       </button>

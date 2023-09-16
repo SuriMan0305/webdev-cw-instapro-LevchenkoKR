@@ -1,4 +1,4 @@
-import { getPosts } from "./api.js";
+import { dropNewPost, getPosts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -45,9 +45,10 @@ export const goToPage = (newPage, data) => {
       LOADING_PAGE,
     ].includes(newPage)
   ) {
+
     if (newPage === ADD_POSTS_PAGE) {
       // Если пользователь не авторизован, то отправляем его на авторизацию перед добавлением поста
-      page === user ? ADD_POSTS_PAGE : AUTH_PAGE;
+      page = user ? ADD_POSTS_PAGE : AUTH_PAGE;
       return renderApp();
     }
 
@@ -125,6 +126,7 @@ const renderApp = () => {
       appEl,
       onAddPostClick({ description, imageUrl }) {
         // TODO: реализовать добавление поста в API
+        dropNewPost({description, imageUrl, token: getToken()});
         console.log("Добавляю пост...", { description, imageUrl });
         goToPage(POSTS_PAGE);
       },
@@ -138,10 +140,6 @@ const renderApp = () => {
   }
 
   if (page === USER_POSTS_PAGE) {
-    // TODO: реализовать страницу постов пользвателя
-    console.log("===>");
-    console.log(posts);
-    console.log("===>");
     appEl.innerHTML = `
     <div class="page-container">
       <div class="header-container" id="header">

@@ -55,6 +55,21 @@ export function loginUser({ login, password }) {
   });
 }
 
+export const dropNewPost = ({description, imageUrl, token}) => {
+  fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+    body: JSON.stringify({
+        "description": `${description}`,
+        "imageUrl": `${imageUrl}`
+    })
+  }).then((response) => {
+    console.log(response);
+  })
+}
+
 // Загружает картинку в облако, возвращает url загруженной картинки
 export function uploadImage({ file }) {
   const data = new FormData();

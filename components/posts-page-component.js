@@ -9,7 +9,6 @@ export function renderPostsPageComponent({ appEl }) {
   let appHtml;
   getPosts({token: getToken()})
     .then((response) => {
-      console.log(response);
       return (listPosts = response
         .map((post) => {
           return `<li class="post">
