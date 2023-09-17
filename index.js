@@ -11,7 +11,9 @@ import {
 import { renderPostsPageComponent } from "./components/posts-page-component.js";
 import { renderLoadingPageComponent } from "./components/loading-page-component.js";
 import {
+  getTokenFromLocalStorage,
   getUserFromLocalStorage,
+  removeTokenFromLocalStorage,
   removeUserFromLocalStorage,
   saveUserToLocalStorage,
 } from "./helpers.js";
@@ -21,6 +23,17 @@ export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
 
+export const clickToLike = () => {
+  const likeButtons = document.querySelectorAll(".like-button");
+  for (const likeButton of likeButtons) {
+    likeButton.addEventListener("click", () => {
+      getPosts({ token: getToken() }).then((response) => {
+        console.log("click");
+      });
+    });
+  }
+};
+
 export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
@@ -29,6 +42,7 @@ export const getToken = () => {
 export const logout = () => {
   user = null;
   removeUserFromLocalStorage();
+  removeTokenFromLocalStorage();
   goToPage(POSTS_PAGE);
 };
 
@@ -80,7 +94,6 @@ export const goToPage = (newPage, data) => {
             return postsOfUser;
           })
           .then((response) => {
-            console.log("Открываю страницу пользователя: ", data.userId);
             posts = response;
             page = USER_POSTS_PAGE;
             return renderApp();
@@ -90,30 +103,10 @@ export const goToPage = (newPage, data) => {
     }
     page = newPage;
     renderApp();
-
     return;
   }
 
   throw new Error("страницы не существует");
-};
-
-export const clickToLike = () => {
-  getPosts({ token: getToken() }).then((response) => {
-    const likeButtons = document.querySelectorAll(".like-button");
-    for (const likeButton of likeButtons) {
-      likeButton.addEventListener("click", () => {
-        for (let i = 0; i < response.length; i++) {
-          if (response[i].id === likeButton.dataset.likeid) {
-            if (response[i].isLiked = false) {
-              addLike({ idPost: likeButton.dataset.likeid, token: getToken()})
-            } else {
-              removeLike({ idPost: likeButton.dataset.likeid, token: getToken()})
-            }
-          }
-        }
-      });
-    }
-  })
 };
 
 export const renderApp = () => {
@@ -124,9 +117,7 @@ export const renderApp = () => {
       user,
       goToPage,
     });
-  }
-
-  if (page === AUTH_PAGE) {
+  } else if (page === AUTH_PAGE) {
     return renderAuthPageComponent({
       appEl,
       setUser: (newUser) => {
@@ -137,9 +128,7 @@ export const renderApp = () => {
       user,
       goToPage,
     });
-  }
-
-  if (page === ADD_POSTS_PAGE) {
+  } else if (page === ADD_POSTS_PAGE) {
     return renderAddPostPageComponent({
       appEl,
       onAddPostClick({ description, imageUrl }) {
@@ -147,15 +136,11 @@ export const renderApp = () => {
         goToPage(POSTS_PAGE);
       },
     });
-  }
-
-  if (page === POSTS_PAGE) {
+  } else if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
-    })
-  }
-
-  if (page === USER_POSTS_PAGE) {
+    });
+  } else {
     appEl.innerHTML = `
     <div class="page-container">
       <div class="header-container" id="header">
@@ -196,9 +181,9 @@ export const renderApp = () => {
     </li>`);
       })
       .join("");
-      return;
+      clickToLike();
+    return;
   }
-
 };
 
 goToPage(POSTS_PAGE);

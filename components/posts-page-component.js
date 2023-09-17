@@ -1,6 +1,6 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { goToPage, getToken, clickToLike, renderApp, } from "../index.js";
+import { goToPage, getToken, clickToLike } from "../index.js";
 import { getPosts } from "../api.js";
 
 
@@ -56,6 +56,8 @@ export function renderPostsPageComponent({ appEl }) {
       renderHeaderComponent({
         element: document.querySelector(".header-container"),
       });
+      
+      clickToLike()
 
       for (let userEl of document.querySelectorAll(".post-header")) {
         userEl.addEventListener("click", () => {
@@ -65,8 +67,6 @@ export function renderPostsPageComponent({ appEl }) {
         });
       }
     });
-  clickToLike();
-    
     /**
      * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
      * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
