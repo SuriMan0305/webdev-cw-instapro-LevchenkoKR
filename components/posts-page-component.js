@@ -2,6 +2,8 @@ import { USER_POSTS_PAGE } from '../routes.js'
 import { renderHeaderComponent } from './header-component.js'
 import { goToPage, getToken, clickToLike } from '../index.js'
 import { getPosts } from '../api.js'
+import { formatDistance } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
 export function renderPostsPageComponent({ appEl }) {
     // TODO: реализовать рендер постов из api
@@ -39,7 +41,9 @@ export function renderPostsPageComponent({ appEl }) {
         ${post.description}
       </p>
       <p class="post-date">
-        ${post.createdAt}
+        ${formatDistance(new Date(), new Date(post.createdAt), {
+            locale: ru,
+        })} назад
       </p>
     </li>`
                 })

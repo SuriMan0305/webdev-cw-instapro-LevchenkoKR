@@ -22,6 +22,8 @@ import {
     saveUserToLocalStorage,
 } from './helpers.js'
 import { renderHeaderComponent } from './components/header-component.js'
+import { formatDistance } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
 export let user = getUserFromLocalStorage()
 export let page = null
@@ -208,7 +210,9 @@ export const renderApp = () => {
           ${post.description}
         </p>
         <p class="post-date">
-          ${post.createdAt}
+          ${formatDistance(new Date(), new Date(post.createdAt), {
+              locale: ru,
+          })} назад
         </p>
       </li>`)
                     })
@@ -218,5 +222,5 @@ export const renderApp = () => {
             })
     }
 }
-
+////////////////////////////////////////
 goToPage(POSTS_PAGE)
