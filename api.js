@@ -1,7 +1,9 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
+import { renderApp } from "./index.js";
+
 // "боевая" версия инстапро лежит в ключе prod
-const personalKey = "prod";
-const baseHost = "https://webdev-hw-api.vercel.app";
+const personalKey = "levchenkoK";
+const baseHost = "https://wedev-api.sky.pro";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
 export function getPosts({ token }) {
@@ -11,12 +13,22 @@ export function getPosts({ token }) {
       Authorization: token,
     },
   })
+    .catch((error) => {
+      if (String(error) === "TypeError: Failed to fetch") {
+        console.warn("потеряно соединение с интернетом");
+        throw new Error("упс, кажется нет интернета");
+      }
+    })
     .then((response) => {
       if (response.status === 401) {
-        throw new Error("Нет авторизации");
+        throw new Error(
+          "Вы не авторизованы, если хотите поставить лайк войдите или зарегистрируйтесь в instapro"
+        );
       }
-
       return response.json();
+    })
+    .catch((error) => {
+      alert(`${error}`);
     })
     .then((data) => {
       return data.posts;
@@ -33,12 +45,22 @@ export function registerUser({ login, password, name, imageUrl }) {
       name,
       imageUrl,
     }),
-  }).then((response) => {
-    if (response.status === 400) {
-      throw new Error("Такой пользователь уже существует");
-    }
-    return response.json();
-  });
+  })
+    .catch((error) => {
+      if (String(error) === "TypeError: Failed to fetch") {
+        console.warn("потеряно соединение с интернетом");
+        throw new Error("упс, кажется нет интернета");
+      }
+    })
+    .then((response) => {
+      if (response.status === 400) {
+        throw new Error("Такой пользователь уже существует");
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      alert(`${error}`);
+    });
 }
 
 export function loginUser({ login, password }) {
@@ -48,13 +70,70 @@ export function loginUser({ login, password }) {
       login,
       password,
     }),
-  }).then((response) => {
-    if (response.status === 400) {
-      throw new Error("Неверный логин или пароль");
-    }
-    return response.json();
-  });
+  })
+    .then((response) => {
+      if (response.status === 400) {
+        throw new Error("Неверный логин или пароль");
+      }
+      return response.json();
+    })
+    .then((response) => {
+      return response;
+    }).catch((error) => {
+      alert(`${error}`)
+    });
 }
+
+export const dropNewPost = ({ description, imageUrl, token }) => {
+  fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+    body: JSON.stringify({
+      description: `${description
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')}`,
+      imageUrl: `${imageUrl
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')}`,
+    }),
+  });
+};
+
+export const addLike = ({ idPost, token }) => {
+  return fetch(postsHost + `/${idPost}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(() => {
+      return renderApp();
+    });
+};
+
+export const removeLike = ({ idPost, token }) => {
+  return fetch(postsHost + `/${idPost}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(() => {
+      return renderApp();
+    });
+};
 
 // Загружает картинку в облако, возвращает url загруженной картинки
 export function uploadImage({ file }) {

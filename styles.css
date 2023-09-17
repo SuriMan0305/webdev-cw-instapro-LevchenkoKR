@@ -3,6 +3,7 @@
 }
 
 .page-header {
+  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -13,7 +14,7 @@
 }
 
 .logo {
-  margin: 0;
+  margin: 0px;
   font-size: 28px;
   cursor: pointer;
   width: 130px;
@@ -60,6 +61,15 @@
   object-fit: cover;
   border-radius: 40px;
   margin-right: 10px;
+}
+
+.user-logo {
+  display: flex;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
+  font-size: 30px;
 }
 
 .post-image-container {
@@ -178,8 +188,20 @@
 
 .file-upload-image-conrainer {
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
+
+label {
+  margin: 20px auto;
+  width: 100%;
+}
+
+.button {
+  margin: 20px auto;
+  width: 100%;
+}
+
 
 .file-upload-image {
   width: 100px;

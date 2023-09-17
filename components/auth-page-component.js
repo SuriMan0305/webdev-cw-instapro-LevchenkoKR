@@ -93,15 +93,26 @@ export function renderAuthPageComponent({ appEl, setUser }) {
         }
 
         loginUser({
-          login: login,
-          password: password,
+          login: login
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;'),
+          password: password
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;'),
         })
           .then((user) => {
             setUser(user.user);
           })
           .catch((error) => {
-            console.warn(error);
-            setError(error.message);
+            if (String(error) === "TypeError: Failed to fetch") {
+              console.warn(error = "потеряно соединение с интернетом");
+              alert(`${error}`)
+              setError(error.message);
+            }
           });
       } else {
         const login = document.getElementById("login-input").value;
@@ -127,15 +138,30 @@ export function renderAuthPageComponent({ appEl, setUser }) {
         }
 
         registerUser({
-          login: login,
-          password: password,
-          name: name,
+          login: login
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;'),
+          password: password
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;'),
+          name: name
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;'),
           imageUrl,
         })
           .then((user) => {
             setUser(user.user);
           })
           .catch((error) => {
+            if (String(error) === "TypeError: Failed to fetch") {
+              throw new Error("упс, кажется нет интернета");
+            }
             console.warn(error);
             setError(error.message);
           });
@@ -147,6 +173,5 @@ export function renderAuthPageComponent({ appEl, setUser }) {
       renderForm();
     });
   };
-
   renderForm();
 }
