@@ -113,10 +113,19 @@ export const addLike = ({ idPost, token }) => {
     },
   })
     .then((response) => {
+      if (response.status === 401) {
+        throw new Error("пожалуйста авторизируйтесь, или зарегистрируйтесь в instapro, чтобы продолжить")
+      }
       return response.json();
     })
     .then(() => {
       return renderApp();
+    }).catch((error) => {
+      if (String(error) === "Error: пожалуйста авторизируйтесь, или зарегистрируйтесь в instapro, чтобы продолжить") {
+        alert(`${error}`)
+      } else {
+        alert("упс, кажется нет интернета")
+      }
     });
 };
 
@@ -128,10 +137,19 @@ export const removeLike = ({ idPost, token }) => {
     },
   })
     .then((response) => {
+      if (response.status === 401) {
+        throw new Error("пожалуйста авторизируйтесь, или зарегистрируйтесь в instapro, чтобы продолжить")
+      }
       return response.json();
     })
     .then(() => {
       return renderApp();
+    }).catch((error) => {
+      if (String(error) === "Error: пожалуйста авторизируйтесь, или зарегистрируйтесь в instapro, чтобы продолжить") {
+        alert(`${error}`)
+      } else {
+        alert("упс, кажется нет интернета")
+      }
     });
 };
 
