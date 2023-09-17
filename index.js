@@ -1,4 +1,4 @@
-import { addLike, dropNewPost, getPosts, removeLike } from "./api.js";
+import { addLike, dropNewPost, getPosts, getPostsOfUser, removeLike } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -142,25 +142,21 @@ export const renderApp = () => {
       appEl,
     });
   } else {
-    getPosts({ token: getToken() }).then((response) => {
-      const newResponse = [];
-      for (let i = 0; i < response.length; i++) {
-        for (let j = 0; j < posts.length; j++) {
-          if (response[i].id === posts[j].id) {
-            newResponse.push(response[i]);
-          }
-        }
-      }
-      console.log(newResponse);
-      return newResponse;
-    }).then((posts) => {
+    getPostsOfUser({ idUserPosts: posts[0].user.id, token: getToken() })
+      .then((response) => {
+        return response.json();
+      }).then((response) => {
+        let postsUser;
+        return postsUser = response;
+      })
+      .then((postsUser) => {
       appEl.innerHTML = `
       <div class="page-container">
         <div class="header-container" id="header">
         </div>
-        <div class="post-header user-logo" data-user-id="${posts[0].user.id}">
-          <img src="${posts[0].user.imageUrl}" class="user-logo post-header__user-image">
-          <p class="user-logo post-header__user-name">${posts[0].user.name}</p>
+        <div class="post-header user-logo" data-user-id="${postsUser.posts[0].user.id}">
+          <img src="${postsUser.posts[0].user.imageUrl}" class="user-logo post-header__user-image">
+          <p class="user-logo post-header__user-name">${postsUser.posts[0].user.name}</p>
         </div>
         <ul class="posts" id="listContainer">
         </ul>
@@ -168,7 +164,7 @@ export const renderApp = () => {
       const headerContainer = document.getElementById("header");
       renderHeaderComponent({ element: headerContainer });
       const listContainer = document.getElementById("listContainer");
-      listContainer.innerHTML = posts
+      listContainer.innerHTML = postsUser.posts
         .map((post) => {
           return (post = `<li class="post">
         <div class="post-image-container">

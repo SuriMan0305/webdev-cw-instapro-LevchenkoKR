@@ -105,6 +105,15 @@ export const dropNewPost = ({ description, imageUrl, token }) => {
   });
 };
 
+export const getPostsOfUser = ({idUserPosts, token}) => {
+  return fetch(postsHost + `/user-posts/${idUserPosts}`, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+}
+
 export const addLike = ({ idPost, token }) => {
   return fetch(postsHost + `/${idPost}/like`, {
     method: "POST",
