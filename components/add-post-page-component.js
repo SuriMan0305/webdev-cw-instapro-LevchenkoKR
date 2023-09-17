@@ -1,11 +1,11 @@
-import { renderHeaderComponent } from "./header-component.js";
-import { renderUploadImageComponent } from "./upload-image-component.js";
+import { renderHeaderComponent } from './header-component.js'
+import { renderUploadImageComponent } from './upload-image-component.js'
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
-  let imageUrl = "";
-  const render = () => {
-    // TODO: Реализовать страницу добавления поста
-    const appHtml = `
+    let imageUrl = ''
+    const render = () => {
+        // TODO: Реализовать страницу добавления поста
+        const appHtml = `
     <div class = "page-container">
       <div class="page-header">
         <h1 class="logo">instapro</h1>
@@ -36,30 +36,38 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
         <button class="button" id="add-button">Добавить</button>
     </div>
     </div>
-  `;
+  `
 
-    appEl.innerHTML = appHtml;
+        appEl.innerHTML = appHtml
 
-    const uploadImageContainer = appEl.querySelector(".upload-image-container");
-    const pageHeader = document.querySelector(".page-container")
-    renderHeaderComponent({element: pageHeader})
+        const uploadImageContainer = appEl.querySelector(
+            '.upload-image-container',
+        )
+        const pageHeader = document.querySelector('.page-container')
+        renderHeaderComponent({ element: pageHeader })
 
-    if (uploadImageContainer) {
-      renderUploadImageComponent({
-        element: appEl.querySelector(".upload-image-container"),
-        onImageUrlChange(newImageUrl) {
-          imageUrl = newImageUrl;
-            document.getElementById("add-button").addEventListener("click", () => {
-              document.getElementById("description").value.length === 0 ? alert("Добавьте описание поста") :
-              onAddPostClick({
-                description: document.getElementById("description").value,
-                imageUrl: imageUrl,
-              });
-            });
-        },
-      });
+        if (uploadImageContainer) {
+            renderUploadImageComponent({
+                element: appEl.querySelector('.upload-image-container'),
+                onImageUrlChange(newImageUrl) {
+                    imageUrl = newImageUrl
+                    document
+                        .getElementById('add-button')
+                        .addEventListener('click', () => {
+                            document.getElementById('description').value
+                                .length === 0
+                                ? alert('Добавьте описание поста')
+                                : onAddPostClick({
+                                      description:
+                                          document.getElementById('description')
+                                              .value,
+                                      imageUrl: imageUrl,
+                                  })
+                        })
+                },
+            })
+        }
     }
-  };
 
-  render();
+    render()
 }
