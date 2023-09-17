@@ -50,7 +50,7 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
         onImageUrlChange(newImageUrl) {
           imageUrl = newImageUrl;
             document.getElementById("add-button").addEventListener("click", () => {
-              document.getElementById("description").value.length === 0 ? alert("Добавьте описание поста") : console.log(imageUrl);
+              document.getElementById("description").value.length === 0 ? alert("Добавьте описание поста") :
               onAddPostClick({
                 description: document.getElementById("description").value,
                 imageUrl: imageUrl,
