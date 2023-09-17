@@ -5,11 +5,9 @@ import { getPosts } from '../api.js'
 
 export function renderPostsPageComponent({ appEl }) {
     // TODO: реализовать рендер постов из api
-    let listPosts = ``
-    let appHtml
     getPosts({ token: getToken() })
         .then((response) => {
-            return (listPosts = response
+            return response
                 .map((post) => {
                     return `<li class="post">
       <div class="post-header" data-user-id="${post.user.id}">
@@ -45,16 +43,16 @@ export function renderPostsPageComponent({ appEl }) {
       </p>
     </li>`
                 })
-                .join(''))
+                .join('')
         })
         .then((listPosts) => {
-            return (appHtml = `
+            return `
     <div class="page-container">
       <div class="header-container"></div>
       <ul class="posts" id="listContainer">
         ${listPosts}
       </ul>
-    </div>`)
+    </div>`
         })
         .then((appHtml) => {
             appEl.innerHTML = appHtml
