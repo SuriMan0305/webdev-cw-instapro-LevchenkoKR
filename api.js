@@ -1,8 +1,5 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
-
-import {
-  saveTokenToLocalStorage,
-} from "./helpers.js";
+import { renderApp } from "./index.js";
 
 // "боевая" версия инстапро лежит в ключе prod
 const personalKey = "levchenkoK";
@@ -60,9 +57,10 @@ export function registerUser({ login, password, name, imageUrl }) {
         throw new Error("Такой пользователь уже существует");
       }
       return response.json();
-    }).catch((error) => {
-      alert(`${error}`)
     })
+    .catch((error) => {
+      alert(`${error}`);
+    });
 }
 
 export function loginUser({ login, password }) {
@@ -80,8 +78,9 @@ export function loginUser({ login, password }) {
       return response.json();
     })
     .then((response) => {
-      saveTokenToLocalStorage(response.user.token);
       return response;
+    }).catch((error) => {
+      alert(`${error}`)
     });
 }
 
@@ -92,8 +91,16 @@ export const dropNewPost = ({ description, imageUrl, token }) => {
       Authorization: token,
     },
     body: JSON.stringify({
-      description: `${description}`,
-      imageUrl: `${imageUrl}`,
+      description: `${description
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')}`,
+      imageUrl: `${imageUrl
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')}`,
     }),
   });
 };
@@ -104,7 +111,13 @@ export const addLike = ({ idPost, token }) => {
     headers: {
       Authorization: token,
     },
-  });
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(() => {
+      return renderApp();
+    });
 };
 
 export const removeLike = ({ idPost, token }) => {
@@ -113,7 +126,13 @@ export const removeLike = ({ idPost, token }) => {
     headers: {
       Authorization: token,
     },
-  });
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then(() => {
+      return renderApp();
+    });
 };
 
 // Загружает картинку в облако, возвращает url загруженной картинки
