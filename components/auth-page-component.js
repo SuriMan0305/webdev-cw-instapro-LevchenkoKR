@@ -100,8 +100,11 @@ export function renderAuthPageComponent({ appEl, setUser }) {
             setUser(user.user);
           })
           .catch((error) => {
-            console.warn(error);
-            setError(error.message);
+            if (String(error) === "TypeError: Failed to fetch") {
+              console.warn(error = "потеряно соединение с интернетом");
+              alert(`${error}`)
+              setError(error.message);
+            }
           });
       } else {
         const login = document.getElementById("login-input").value;
@@ -136,6 +139,9 @@ export function renderAuthPageComponent({ appEl, setUser }) {
             setUser(user.user);
           })
           .catch((error) => {
+            if (String(error) === "TypeError: Failed to fetch") {
+              throw new Error("упс, кажется нет интернета");
+            }
             console.warn(error);
             setError(error.message);
           });
@@ -147,6 +153,5 @@ export function renderAuthPageComponent({ appEl, setUser }) {
       renderForm();
     });
   };
-
   renderForm();
 }

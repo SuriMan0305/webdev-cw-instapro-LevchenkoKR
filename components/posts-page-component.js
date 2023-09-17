@@ -1,13 +1,14 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage, getToken } from "../index.js";
+import { goToPage, getToken, clickToLike } from "../index.js";
 import { getPosts } from "../api.js";
+
 
 export function renderPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
   let listPosts = ``;
   let appHtml;
-  getPosts({token: getToken()})
+  getPosts({ token: getToken() })
     .then((response) => {
       return (listPosts = response
         .map((post) => {
@@ -20,8 +21,10 @@ export function renderPostsPageComponent({ appEl }) {
         <img class="post-image" src="${post.imageUrl}">
       </div>
       <div class="post-likes">
-        <button data-post-id="${post.id}" class="like-button">
-          <img src="./assets/images/${post.isLiked === true ? "like-active.svg" : "like-not-active.svg"}">
+        <button data-likeid="${post.id}" class="like-button">
+          <img src="./assets/images/${
+            post.isLiked === true ? "like-active.svg" : "like-not-active.svg"
+          }">
         </button>
         <p class="post-likes-text">
           Нравится: <strong>${post.likes.length}</strong>
@@ -53,6 +56,8 @@ export function renderPostsPageComponent({ appEl }) {
       renderHeaderComponent({
         element: document.querySelector(".header-container"),
       });
+      
+      clickToLike()
 
       for (let userEl of document.querySelectorAll(".post-header")) {
         userEl.addEventListener("click", () => {
@@ -62,8 +67,8 @@ export function renderPostsPageComponent({ appEl }) {
         });
       }
     });
-  /**
-   * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-   * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-   */
+    /**
+     * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
+     * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
+    */
 }

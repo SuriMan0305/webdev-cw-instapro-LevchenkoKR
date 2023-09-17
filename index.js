@@ -1,4 +1,4 @@
-import { dropNewPost, getPosts } from "./api.js";
+import { addLike, dropNewPost, getPosts, removeLike } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
@@ -11,7 +11,9 @@ import {
 import { renderPostsPageComponent } from "./components/posts-page-component.js";
 import { renderLoadingPageComponent } from "./components/loading-page-component.js";
 import {
+  getTokenFromLocalStorage,
   getUserFromLocalStorage,
+  removeTokenFromLocalStorage,
   removeUserFromLocalStorage,
   saveUserToLocalStorage,
 } from "./helpers.js";
@@ -21,6 +23,17 @@ export let user = getUserFromLocalStorage();
 export let page = null;
 export let posts = [];
 
+export const clickToLike = () => {
+  const likeButtons = document.querySelectorAll(".like-button");
+  for (const likeButton of likeButtons) {
+    likeButton.addEventListener("click", () => {
+      getPosts({ token: getToken() }).then((response) => {
+        console.log("click");
+      });
+    });
+  }
+};
+
 export const getToken = () => {
   const token = user ? `Bearer ${user.token}` : undefined;
   return token;
@@ -29,6 +42,7 @@ export const getToken = () => {
 export const logout = () => {
   user = null;
   removeUserFromLocalStorage();
+  removeTokenFromLocalStorage();
   goToPage(POSTS_PAGE);
 };
 
@@ -45,7 +59,6 @@ export const goToPage = (newPage, data) => {
       LOADING_PAGE,
     ].includes(newPage)
   ) {
-
     if (newPage === ADD_POSTS_PAGE) {
       // Если пользователь не авторизован, то отправляем его на авторизацию перед добавлением поста
       page = user ? ADD_POSTS_PAGE : AUTH_PAGE;
@@ -81,7 +94,6 @@ export const goToPage = (newPage, data) => {
             return postsOfUser;
           })
           .then((response) => {
-            console.log("Открываю страницу пользователя: ", data.userId);
             posts = response;
             page = USER_POSTS_PAGE;
             return renderApp();
@@ -91,14 +103,13 @@ export const goToPage = (newPage, data) => {
     }
     page = newPage;
     renderApp();
-
     return;
   }
 
   throw new Error("страницы не существует");
 };
 
-const renderApp = () => {
+export const renderApp = () => {
   const appEl = document.getElementById("app");
   if (page === LOADING_PAGE) {
     return renderLoadingPageComponent({
@@ -106,9 +117,7 @@ const renderApp = () => {
       user,
       goToPage,
     });
-  }
-
-  if (page === AUTH_PAGE) {
+  } else if (page === AUTH_PAGE) {
     return renderAuthPageComponent({
       appEl,
       setUser: (newUser) => {
@@ -119,27 +128,19 @@ const renderApp = () => {
       user,
       goToPage,
     });
-  }
-
-  if (page === ADD_POSTS_PAGE) {
+  } else if (page === ADD_POSTS_PAGE) {
     return renderAddPostPageComponent({
       appEl,
       onAddPostClick({ description, imageUrl }) {
-        // TODO: реализовать добавление поста в API
-        dropNewPost({description, imageUrl, token: getToken()});
-        console.log("Добавляю пост...", { description, imageUrl });
+        dropNewPost({ description, imageUrl, token: getToken() });
         goToPage(POSTS_PAGE);
       },
     });
-  }
-
-  if (page === POSTS_PAGE) {
+  } else if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
     });
-  }
-
-  if (page === USER_POSTS_PAGE) {
+  } else {
     appEl.innerHTML = `
     <div class="page-container">
       <div class="header-container" id="header">
@@ -161,7 +162,7 @@ const renderApp = () => {
         <img class="post-image" src="${post.imageUrl}">
       </div>
       <div class="post-likes">
-        <button data-post-id="${post.id}" class="like-button">
+        <button class="like-button" data-likeid='${post.id}'>
           <img src="./assets/images/${
             post.isLiked === true ? "like-active.svg" : "like-not-active.svg"
           }">
@@ -180,6 +181,7 @@ const renderApp = () => {
     </li>`);
       })
       .join("");
+      clickToLike();
     return;
   }
 };
