@@ -187,8 +187,20 @@
 
 .file-upload-image-conrainer {
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
+
+label {
+  margin: 20px auto;
+  width: 100%;
+}
+
+.button {
+  margin: 20px auto;
+  width: 100%;
+}
+
 
 .file-upload-image {
   width: 100px;
