@@ -1,8 +1,7 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { goToPage, getToken, clickToLike } from "../index.js";
+import { goToPage, getToken, clickToLike, renderApp } from "../index.js";
 import { getPosts } from "../api.js";
-
 
 export function renderPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
@@ -27,7 +26,14 @@ export function renderPostsPageComponent({ appEl }) {
           }">
         </button>
         <p class="post-likes-text">
-          Нравится: <strong>${post.likes.length}</strong>
+          Нравится: <strong>
+          ${
+            post.likes.length > 0
+              ? `${post.likes[post.likes.length - 1].name}`
+              : `0`
+          }
+            ${post.likes.length > 1 ? `и ещё ${post.likes.length - 1}` : ``}
+          </strong>
         </p>
       </div>
       <p class="post-text">
@@ -56,8 +62,8 @@ export function renderPostsPageComponent({ appEl }) {
       renderHeaderComponent({
         element: document.querySelector(".header-container"),
       });
-      
-      clickToLike()
+
+      clickToLike();
 
       for (let userEl of document.querySelectorAll(".post-header")) {
         userEl.addEventListener("click", () => {
@@ -67,8 +73,8 @@ export function renderPostsPageComponent({ appEl }) {
         });
       }
     });
-    /**
-     * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-     * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-    */
+  /**
+   * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
+   * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
+   */
 }
