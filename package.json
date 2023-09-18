@@ -1,0 +1,23 @@
+{
+    "name": "webdev-cw-instapro-levchenkokr",
+    "version": "1.0.0",
+    "description": "MVP аналога популярной соц. сети для обмена фотографиями",
+    "main": "index.js",
+    "scripts": {
+        "dev": "webpack --mode development --watch",
+        "format": "prettier --write ./",
+        "lint:js": "eslint ./**/*.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "date-fns": "^2.30.0",
+        "eslint": "^8.49.0",
+        "eslint-config-prettier": "^9.0.0",
+        "eslint-plugin-prettier": "^5.0.0",
+        "prettier": "^3.0.3",
+        "webpack": "^5.88.2",
+        "webpack-cli": "^5.1.4"
+    }
+}
