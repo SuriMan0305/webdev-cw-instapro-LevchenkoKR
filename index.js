@@ -6,7 +6,7 @@ import {
     removeLike,
 } from './api.js'
 import { renderAddPostPageComponent } from './components/add-post-page-component.js'
-import { renderAuthPageComp } from './components/auth-page-component.'
+import { renderAuthPageComponent } from './components/auth-page-component.js'
 import {
     ADD_POSTS_PAGE,
     AUTH_PAGE,
