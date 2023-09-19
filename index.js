@@ -104,9 +104,15 @@ export const goToPage = (newPage, data) => {
                     .then((response) => {
                         const postsOfUser = []
                         response.forEach((element) => {
-                            element.user.id === data.userId
-                                ? postsOfUser.push(element)
-                                : element
+                            if (data !== undefined) {
+                                element.user.id === data.userId
+                                    ? postsOfUser.push(element)
+                                    : element
+                            } else {
+                                element.user.id === user._id
+                                    ? postsOfUser.push(element)
+                                    : element
+                            }
                         })
                         return postsOfUser
                     })
@@ -208,15 +214,19 @@ export const renderApp = () => {
             </strong>
           </p>
         </div>
-        <p class="post-text">
-          <span class="user-name">${post.user.name}</span>
-          ${post.description}
-        </p>
-        <p class="post-date">
-          ${formatDistance(new Date(), new Date(post.createdAt), {
-              locale: ru,
-          })} назад
-        </p>
+        <div class="footerPostContainer">
+            <div class="footerPostInfo">
+            <p class="post-text">
+            <span class="user-name">${post.user.name}</span>
+            ${post.description}
+          </p>
+          <p class="post-date">опубликовано 
+            ${formatDistance(new Date(), new Date(post.createdAt), {
+                locale: ru,
+            })} назад
+          </p>
+            </div>
+        </div>
       </li>`)
                     })
                     .join('')

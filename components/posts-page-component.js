@@ -40,7 +40,7 @@ export function renderPostsPageComponent({ appEl }) {
         <span class="user-name">${post.user.name}</span>
         ${post.description}
       </p>
-      <p class="post-date">
+      <p class="post-date">опубликовано
         ${formatDistance(new Date(), new Date(post.createdAt), {
             locale: ru,
         })} назад

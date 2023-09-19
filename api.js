@@ -3,7 +3,7 @@ import { goToPage, renderApp } from './index.js'
 import { POSTS_PAGE } from './routes.js'
 
 // "боевая" версия инстапро лежит в ключе prod
-const personalKey = 'levchenkoK'
+const personalKey = 'levchenkoKR'
 const baseHost = 'https://wedev-api.sky.pro'
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`
 

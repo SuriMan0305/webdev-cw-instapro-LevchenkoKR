@@ -3,14 +3,18 @@
 }
 
 .page-header {
-    box-sizing: border-box;
+    width: 98%;
+    position: fixed;
+    z-index: auto;
+    top: 0px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     border-bottom: 1px solid #e0e0e0;
-    padding: 20px 16px;
+    padding: 10px 16px;
     margin-left: -20px;
     margin-right: -20px;
+    background-color: #ffffff;
 }
 
 .logo {
@@ -20,8 +24,41 @@
     width: 130px;
 }
 
+.myAccountContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #d2d2d2;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-top: 40px;
+    padding: 20px;
+    padding-bottom: 10px;
+}
+
+.myAccountPhoto {
+    width: 60px;
+    height: 60px;
+    border-radius: 60px;
+    border: 7px solid #ffffff;
+    margin-bottom: 10px;
+}
+
+.myAccountPhoto:hover {
+    cursor: pointer;
+    border: 7px solid #000000;
+    transition: 0.4s;
+}
+
+.myAccountText {
+    font-weight: 600;
+}
+
 .header-container {
-    margin-bottom: 8px;
+    font-family: Helvetica;
+    font-size: 30px;
+    padding-bottom: 45px;
 }
 
 .header-button {
@@ -139,6 +176,31 @@
 .posts-user-header__user-name {
     font-size: 28px;
     line-height: 35px;
+}
+
+.footerPostContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.deletePostButton {
+    font-family: Helvetica;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    padding: 0px 15px;
+    border-radius: 15px;
+    background-color: #ff2a2a;
+    transition: 0.3s;
+}
+
+.deletePostButton:hover {
+    background-color: #f84f4f;
+    cursor: pointer;
+}
+
+.deletePostButton:active {
+    background-color: #ff2a2a;
 }
 
 .loading-page {
