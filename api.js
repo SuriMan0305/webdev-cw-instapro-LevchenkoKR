@@ -1,5 +1,6 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
-import { renderApp } from './index.js'
+import { goToPage, renderApp } from './index.js'
+import { POSTS_PAGE } from './routes.js'
 
 // "боевая" версия инстапро лежит в ключе prod
 const personalKey = 'levchenkoK'
@@ -58,9 +59,7 @@ export function registerUser({ login, password, name, imageUrl }) {
             }
             return response.json()
         })
-        .catch((error) => {
-            alert(`${error}`)
-        })
+        .catch(() => {})
 }
 
 export function loginUser({ login, password }) {
@@ -79,9 +78,6 @@ export function loginUser({ login, password }) {
         })
         .then((response) => {
             return response
-        })
-        .catch((error) => {
-            alert(`${error}`)
         })
 }
 
@@ -104,6 +100,16 @@ export const dropNewPost = ({ description, imageUrl, token }) => {
                 .replaceAll('"', '&quot;')}`,
         }),
     })
+        .then((response) => {
+            if (response.status === 400) {
+                throw new Error('добавьте описание')
+            } else {
+                goToPage(POSTS_PAGE)
+            }
+        })
+        .catch((error) => {
+            console.warn(error)
+        })
 }
 
 export const getPostsOfUser = ({ idUserPosts, token }) => {

@@ -149,8 +149,11 @@ export const renderApp = () => {
         return renderAddPostPageComponent({
             appEl,
             onAddPostClick({ description, imageUrl }) {
-                dropNewPost({ description, imageUrl, token: getToken() })
-                goToPage(POSTS_PAGE)
+                dropNewPost({
+                    description,
+                    imageUrl,
+                    token: getToken(),
+                })
             },
         })
     } else if (page === POSTS_PAGE) {
