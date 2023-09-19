@@ -54,6 +54,27 @@ export function renderAuthPageComponent({ appEl, setUser }) {
 
         appEl.innerHTML = appHtml
 
+        const passwordValidation = document.getElementById('password-input')
+        const passwordToValidation = () => {
+            passwordValidation.addEventListener('input', () => {
+                if (passwordValidation.value.length <= 2) {
+                    document.getElementById('login-button').disabled = true
+                    document.getElementById(
+                        'login-button',
+                    ).style.backgroundColor = `#6d73ff`
+                    document.querySelector(
+                        '.form-error',
+                    ).textContent = `Пароль должен быть не короче 3х символов`
+                } else {
+                    document.getElementById('login-button').disabled = false
+                    document.getElementById(
+                        'login-button',
+                    ).style.backgroundColor = `#565eef`
+                    document.querySelector('.form-error').textContent = ``
+                }
+            })
+        }
+
         // Не вызываем перерендер, чтобы не сбрасывалась заполненная форма
         // Точечно обновляем кусочек дом дерева
         const setError = (message) => {
@@ -77,11 +98,12 @@ export function renderAuthPageComponent({ appEl, setUser }) {
             })
         }
 
+        passwordToValidation()
+
         document
             .getElementById('login-button')
             .addEventListener('click', () => {
                 setError('')
-
                 if (isLoginMode) {
                     const login = document.getElementById('login-input').value
                     const password =
@@ -121,8 +143,12 @@ export function renderAuthPageComponent({ appEl, setUser }) {
                                         'потеряно соединение с интернетом'),
                                 )
                                 alert(`${error}`)
-                                setError(error.message)
+                            } else {
+                                throw new Error('Неверный логин или пароль')
                             }
+                        })
+                        .catch((error) => {
+                            setError(error.message)
                         })
                 } else {
                     const login = document.getElementById('login-input').value
@@ -139,7 +165,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
                     }
 
                     if (!password) {
-                        alert('Введите пароль')
+                        alert('Введите пароль, не короче 3х символов')
                         return
                     }
 
@@ -174,8 +200,18 @@ export function renderAuthPageComponent({ appEl, setUser }) {
                                 String(error) === 'TypeError: Failed to fetch'
                             ) {
                                 throw new Error('упс, кажется нет интернета')
+                            } else if (
+                                String(error) ===
+                                String(
+                                    "TypeError: Cannot read properties of undefined (reading 'user')",
+                                )
+                            ) {
+                                throw new Error(
+                                    'такой пользователь уже существует',
+                                )
                             }
-                            console.warn(error)
+                        })
+                        .catch((error) => {
                             setError(error.message)
                         })
                 }

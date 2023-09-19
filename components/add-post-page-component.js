@@ -2,7 +2,6 @@ import { renderHeaderComponent } from './header-component.js'
 import { renderUploadImageComponent } from './upload-image-component.js'
 
 export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
-    let imageUrl = ''
     const render = () => {
         // TODO: Реализовать страницу добавления поста
         const appHtml = `
@@ -40,34 +39,44 @@ export function renderAddPostPageComponent({ appEl, onAddPostClick }) {
 
         appEl.innerHTML = appHtml
 
-        const uploadImageContainer = appEl.querySelector(
-            '.upload-image-container',
-        )
         const pageHeader = document.querySelector('.page-container')
         renderHeaderComponent({ element: pageHeader })
 
+        const uploadImageContainer = appEl.querySelector(
+            '.upload-image-container',
+        )
+
         if (uploadImageContainer) {
+            document
+                .getElementById('add-button')
+                .addEventListener('click', () => {
+                    if (
+                        uploadImageContainer.textContent.trim() ===
+                        'Выберите фото'
+                    ) {
+                        alert('добавьте фото')
+                    } else if (
+                        document.getElementById('description').value === ''
+                    ) {
+                        alert('добавьте описание')
+                    }
+                })
             renderUploadImageComponent({
                 element: appEl.querySelector('.upload-image-container'),
                 onImageUrlChange(newImageUrl) {
-                    imageUrl = newImageUrl
                     document
                         .getElementById('add-button')
                         .addEventListener('click', () => {
-                            document.getElementById('description').value
-                                .length === 0
-                                ? alert('Добавьте описание поста')
-                                : onAddPostClick({
-                                      description:
-                                          document.getElementById('description')
-                                              .value,
-                                      imageUrl: imageUrl,
-                                  })
+                            onAddPostClick({
+                                description:
+                                    document.getElementById('description')
+                                        .value,
+                                imageUrl: newImageUrl,
+                            })
                         })
                 },
-            })
+            }) //////////
         }
     }
-
     render()
 }
